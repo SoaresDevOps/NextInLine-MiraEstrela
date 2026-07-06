@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página do Formulário</title>
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+    <style>
+        /* Estilos Gerais */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Container Principal */
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Estilos dos Dropdowns e Textarea */
+        select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus, textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Estilo do Botão */
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <h1>Sala</h1>
+            <select id="dropdown">
+                <option value="Triagem">Triagem</option>
+                <option value="Consultório 1">Consultório 1</option>
+                <option value="Consultório 2">Consultório 2</option>
+                <option value="Consultório 3">Consultório 3</option>
+                <option value="Consultório 4">Consultório 4</option>
+            </select>
+        </div>
+        <div>
+            <h1>Paciente</h1>
+            <textarea id="textarea" placeholder="Digite a senha..."></textarea>
+        </div>
+        <div>
+            <h1>Doutor</h1>
+            <select id="dropdown_doutor">
+                <option value=""></option>
+                <option value="Enf. Elaine">Enf. Elaine</option>
+                <option value="Enf. Leda">Enf. Leda</option>
+                <option value="Enf. Damares">Enf. Damares</option>
+                <option value="Enf. Danila">Enf. Danila</option>
+                <option value="Tec. Enf Janina">Tec. Enf Janina</option>
+                <option value="Tec. Enf Suzi">Tec. Enf Suzi</option>
+                <option value="Tec. Enf Janes">Tec. Enf Janes</option>
+                <option value="Tec. Enf Tatiane">Tec. Enf Tatiane</option>
+                <option value="Tec. Enf Fernanda">Tec. Enf Fernanda</option>
+                <option value="Tec. Enf Adriely">Tec. Enf Adriely</option>
+                <option value="Tec. Enf Alessandra Botelho">Tec. Enf Alessandra Botelho</option>
+                <option value="Dr. Marco (Pediatra)">Dr. Marco (Pediatra)</option>
+                <option value="Dra. Camila (Geriatra)">Dra. Camila (Geriatra)</option>
+                <option value="Dra. Joyce (Médica da Família)">Dra. Joyce (Médica da Família)</option>
+                <option value="Dra. Mariane (Clínica Geral)">Dra. Mariane (Clínica Geral)</option>
+                <option value="Dr. Felipe (Clínico Geral)">Dr. Felipe (Clínico Geral)</option>
+                <option value="Dr. Lucas (Médico da Família)">Dr. Lucas (Médico da Família)</option>
+                <option value="Dr. Marcos (Ginecologista)">Dr. Marcos (Ginecologista)</option>           
+            </select>
+        </div>
+        <button onclick="enviar()">Enviar</button>
+    </div>
+
+    <script>
+        const socket = io(); // Faz a comunicação com o backend por WebSocket
+
+        function enviar() {
+            const dropdown = document.getElementById('dropdown');
+            const selectedSala = dropdown.value; // Pega a opção que o cliente solicitou
+            socket.emit('send_sala', { sala: selectedSala }); // Envia ao servidor a opção
+
+            const textarea = document.getElementById('textarea');
+            const selectedSenha = textarea.value;
+            socket.emit('send_senha', { senha: selectedSenha });
+
+            const dropdown_doutor = document.getElementById('dropdown_doutor');
+            const selectedDoutor = dropdown_doutor.value;
+            socket.emit('send_doutor', { doutor: selectedDoutor });
+
+            socket.emit('tocar_som');
+        }
+    </script>
+</body>
+</html>
