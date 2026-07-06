@@ -1,22 +1,22 @@
-#importando as Bibliotecas
-from flask import Flask, render_template, jsonify
+import os
+from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
-#Configurações basicas
+
+# Configurações básicas
 app = Flask(__name__, static_folder='static', template_folder='static')
-socketio = SocketIO(app, cors_allowed_origins="*") #permitindo a comunicacao de varios dispositivos
+socketio = SocketIO(app, cors_allowed_origins="*")
 
-
-#pagina principal
+# Página principal
 @app.route('/')
 def index():
     return render_template('index.html')
 
-#pagina do resultado
+# Página do resultado
 @app.route('/resultado')
 def resultado():
     return render_template('resultado.html')
 
-#comunicação por websocket
+# Comunicação por WebSocket
 @socketio.on('send_sala')
 def handle_send_sala(data):
     sala = data.get('sala', '')
@@ -37,4 +37,10 @@ def handle_tocar_som():
     emit('reproduzir_som', broadcast=True)
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+    socketio.run(
+        app,
+        host='0.0.0.0',
+        port=int(os.environ.get("PORT", 5000)),
+        debug=False,
+        allow_unsafe_werkzeug=True
+    )
