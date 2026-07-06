@@ -163,10 +163,8 @@ socket.on("receive_senha", (data)=>{
     clearTimeout(tempoExibicao);
 
     tempoExibicao = setTimeout(()=>{
-
-        document.getElementById("displaySenha").textContent =
-            "Aguardando próxima chamada...";
-
+        // não limpa mais nada
+        // mantém última chamada fixa na tela
     },10000);
 
 });
@@ -192,6 +190,37 @@ socket.on("receive_doutor",(data)=>{
         data.doutor || "Nenhum profissional ainda";
 
 });
+
+/* ===========================
+   ANTI-SLEEP TV (KEEP ALIVE)
+=========================== */
+
+setInterval(() => {
+
+    document.body.style.opacity = "0.99";
+    setTimeout(() => {
+        document.body.style.opacity = "1";
+    }, 50);
+
+}, 30000);
+
+/* ===========================
+   WAKE LOCK (SE SUPORTADO)
+=========================== */
+
+let wakeLock = null;
+
+async function manterTelaAtiva() {
+    try {
+        if ("wakeLock" in navigator) {
+            wakeLock = await navigator.wakeLock.request("screen");
+        }
+    } catch (e) {
+        console.log("WakeLock não suportado");
+    }
+}
+
+document.addEventListener("click", manterTelaAtiva);
 
 </script>
 
