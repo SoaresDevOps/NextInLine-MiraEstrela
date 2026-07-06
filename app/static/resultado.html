@@ -95,7 +95,7 @@
     <source src="{{ url_for('static', filename='audio/som.mp3') }}" type="audio/mpeg">
 </audio>
 
-<video id="meuVideo" autoplay muted>
+<video id="meuVideo" autoplay muted playsinline>
     <source src="{{ url_for('static', filename='videos/video2.mp4') }}" type="video/mp4">
 </video>
 
@@ -163,10 +163,7 @@ socket.on("receive_senha", (data)=>{
     document.getElementById("displaySenha").textContent =
         data.senha || "Nenhuma senha ainda";
 
-    video.pause();
-    video.style.display = "none";
-
-    // AGORA APARECE CENTRALIZADO
+    // NÃO PAUSA MAIS O VÍDEO
     painelSenha.style.display = "flex";
 
     audio.currentTime = 0;
@@ -177,13 +174,7 @@ socket.on("receive_senha", (data)=>{
 
     tempoExibicao = setTimeout(()=>{
 
-        // ESCONDE O PAINEL
         painelSenha.style.display = "none";
-
-        // VOLTA O VÍDEO
-        video.style.display = "block";
-
-        video.play().catch(console.error);
 
     },10000);
 
